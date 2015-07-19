@@ -6,7 +6,7 @@ package object parzer {
   /**
    * A parser can be flatmapped and can be added to another parser
    */
-  class Parser[A](val parser: PString => Option[(A, PString)]) {
+  class Parser[A](parser: PString => Option[(A, PString)]) {
 
     def parse(s: List[Char]): Option[(A, PString)] = parser(s)
 
