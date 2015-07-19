@@ -6,7 +6,7 @@ package object parzer {
   /**
    * A parser can be flatmapped and can be added to another parser
    */
-  class Parser[A](val parser: PString => Option[(A, PString)]) {
+  class Parser[A](parser: PString => Option[(A, PString)]) {
 
     def parse(s: List[Char]): Option[(A, PString)] = parser(s)
 
@@ -16,7 +16,7 @@ package object parzer {
     //implement flatmap so that we can use the for notation to create bigger parsers out of parser parts
     def flatMap[B](f: A => Parser[B]): Parser[B] = new Parser(inp => parser(inp) match {
       case None => None
-      case Some((a, s)) => f(a).parser(s)
+      case Some((a, s)) => f(a).parse(s)
     })
 
 
