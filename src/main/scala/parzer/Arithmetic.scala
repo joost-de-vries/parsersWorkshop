@@ -8,25 +8,25 @@ object Arithmetic {
   import CharParsers._
 
   def expr: Parser[Int] = {
-    def tpluse(t: Int) = for {
+    def termPlusExpr(t: Int) = for {
       _ <- char('+')
       e <- expr
     } yield (t + e)
 
     for {t <- term
-         t2 <- tpluse(t) or Parser(t)
+         t2 <- termPlusExpr(t) or Parser(t)
     } yield t2
   }
 
   def term: Parser[Int] = {
-    def exx(f: Int) = for {
+    def factorTimesTerm(f: Int) = for {
       _ <- char('*')
       t <- term
     } yield (f * t)
 
 
     for {f <- factor
-         f2 <- exx(f) or Parser(f)
+         f2 <- factorTimesTerm(f) or Parser(f)
     } yield f2
   }
 

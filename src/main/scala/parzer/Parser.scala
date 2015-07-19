@@ -1,4 +1,3 @@
-
 package object parzer {
 
   type PString = List[Char]
@@ -47,7 +46,4 @@ package object parzer {
     }
     def failure[A]: Parser[A] = zero[A]
   }
-  
-
-
 }
