@@ -5,7 +5,7 @@ package object parzer {
   /**
    * A parser can be flatmapped and can be added to another parser
    */
-  implicit class Parser[A](parser: PString => Option[(A, PString)]) extends Function[PString, Option[(A, PString)]]{
+  class Parser[A](parser: PString => Option[(A, PString)]) extends Function[PString, Option[(A, PString)]]{
 
     def apply(s: List[Char]): Option[(A, PString)] = parser(s)
 
