@@ -6,10 +6,10 @@ package parzer
 object CharParsers {
   import Parser._
 
-  def item: Parser[Char] = new Parser(inp => inp match {
+  def item: Parser[Char] = {
     case List() => None
     case x :: xs => Some((x, xs))
-  })
+  }
 
   /** derived primitives */
   def satisfies(p: Char => Boolean): Parser[Char] = item.flatMap(x =>
