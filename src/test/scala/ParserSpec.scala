@@ -13,4 +13,8 @@ class ParserSpec extends FlatSpec with Matchers {
   "parser example q" should "parse digits if brackets are matched" in {
     q.parse("[1,2,3,4]") should be(Some(List(1,2,3,4),List()))
   }
+
+  it should "fail if brackets are not matched" in {
+    q.parse("[1,2,3,4") should be(None)
+  }
 }
