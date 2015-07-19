@@ -5,23 +5,23 @@ package object parzer {
   /**
    * A parser can be flatmapped and can be added to another parser
    */
-  class Parser[A](parser: PString => Option[(A, PString)]) {
+  implicit class Parser[A](parser: PString => Option[(A, PString)]) extends Function[PString, Option[(A, PString)]]{
 
-    def parse(s: List[Char]): Option[(A, PString)] = parser(s)
+    def apply(s: List[Char]): Option[(A, PString)] = parser(s)
 
     def parse(s: String): Option[(A, PString)] = parser(s.toList)
 
     /** flatmappable */
     def flatMap[B](f: A => Parser[B]): Parser[B] = new Parser(inp => parser(inp) match {
       case None => None
-      case Some((a, s)) => f(a).parse(s)
+      case Some((a, s)) => f(a)(s)
     })
 
     def map[B](f: A => B): Parser[B] = flatMap(a => Parser(f(a)))
 
     /** addable */
-    def plus(q: Parser[A]): Parser[A] = new Parser(inp => parse(inp) match {
-      case None => q.parse(inp)
+    def plus(q: Parser[A]): Parser[A] = new Parser(inp => this(inp) match {
+      case None => q(inp)
       case Some((v, out)) => Some(v, out)
     })
 
@@ -44,6 +44,7 @@ package object parzer {
            vs <- many(p)
       } yield v :: vs
     }
+
     def failure[A]: Parser[A] = zero[A]
   }
 }

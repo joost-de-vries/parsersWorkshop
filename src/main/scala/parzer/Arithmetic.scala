@@ -41,6 +41,6 @@ object Arithmetic {
   }
 
   def eval(s: String): Option[Int] = {
-    expr.parse(s.toList).map { case (i, s) => i }
+    expr(s.toList).map { case (i, s) => i }
   }
 }
