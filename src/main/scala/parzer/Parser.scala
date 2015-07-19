@@ -14,7 +14,11 @@ package object parzer {
 
     /** flatmappable */
     //implement flatmap so that we can use the for notation to create bigger parsers out of parser parts
-    def flatMap[B](f: A => Parser[B]): Parser[B] = ???
+    def flatMap[B](f: A => Parser[B]): Parser[B] = new Parser(inp => parser(inp) match {
+      case None => None
+      case Some((a, s)) => f(a).parser(s)
+    })
+
 
     def map[B](f: A => B): Parser[B] = flatMap(a => Parser(f(a)))
 
@@ -92,13 +96,22 @@ package object parzer {
 
     //Define a parser that parses an integer literal.
     // An integer literal consists of an optional minus sign, followed by a sequence of one or more digits.
-    def int: Parser[Int] = ???
+    def int: Parser[Int] = {
+      val minP = for {_ <- char('-')
+                      n <- nat} yield -n
+
+      minP +++ nat
+    }
 
     def space: Parser[Unit] = for {_ <- many(satisfies(_.isSpaceChar))} yield ()
 
     //Define a parser comment :: Parser () for ordinary Haskell-like comments that begin with the symbol //
     // and extend to the end of the current line, which is represented by the control character '\n' (beware Windows users!).
-    def comment: Parser[Unit] = ???
+    def comment: Parser[Unit] = {
+      for {_ <- string("//")
+           _ <- many(satisfies(_ != '\n'))
+      } yield ()
+    }
 
     /*  Consider expressions built up from non-negative numbers, greater or equal to zero using a
     subtraction operator that associates to the left.
@@ -112,7 +125,12 @@ result in a program that does not terminate because of the left-recursion.
 You can factor recursive grammars using iteration.
 
 Choose an iterative implementation of left-asociative expressions that does not suffer from non-termination. */
-    def expr: Parser[Int] = ???
+    def expr: Parser[Int] = {
+      for {n <- natural
+           ns <- many(for {_ <- symbol("-")
+                           n1 <- natural} yield n1)
+      } yield (ns.foldLeft(n) { case (x, y) => x - y })
+    }
 
     // ignoring spacing
     def token[A](p: Parser[A]): Parser[A] = {
