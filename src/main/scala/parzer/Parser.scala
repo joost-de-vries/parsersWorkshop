@@ -14,10 +14,7 @@ package object parzer {
 
     /** flatmappable */
     //implement flatmap so that we can use the for notation to create bigger parsers out of parser parts
-    def flatMap[B](f: A => Parser[B]): Parser[B] = new Parser(inp => parser(inp) match {
-      case None => None
-      case Some((a, s)) => f(a).parse(s)
-    })
+    def flatMap[B](f: A => Parser[B]): Parser[B] = new Parser(inp => parser(inp).flatMap { case (a, s) => f(a).parse(s) })
 
 
     def map[B](f: A => B): Parser[B] = flatMap(a => Parser(f(a)))
@@ -53,4 +50,5 @@ package object parzer {
       } yield v :: vs
     }
   }
+
 }
