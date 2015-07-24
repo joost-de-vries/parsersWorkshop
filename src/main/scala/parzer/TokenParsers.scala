@@ -41,7 +41,7 @@ Choose an iterative implementation of left-asociative expressions that does not 
     for {n <- natural
          ns <- many(for {_ <- symbol("-")
                          n1 <- natural} yield n1)
-    } yield (ns.foldLeft(n) { case (x, y) => x - y })
+    } yield ns.foldLeft(n) { case (x, y) => x - y }
   }
 }
 

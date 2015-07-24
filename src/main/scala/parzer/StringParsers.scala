@@ -12,7 +12,7 @@ object StringParsers {
     case List() => Parser(List())
     case x :: xs => for {_ <- char(x)
                          _ <- string(xs)
-    } yield (x :: xs)
+    } yield x :: xs
   }
 
   def string(s: String): Parser[PString] = string(s.toList)
@@ -37,7 +37,7 @@ object StringParsers {
 
   def space: Parser[Unit] = for {_ <- many(satisfies(_.isSpaceChar))} yield ()
 
-  //Define a parser comment :: Parser () for ordinary Haskell-like comments that begin with the symbol //
+  //Define a parser comment :: Parser () for ordinary Scala like comments that begin with the symbol //
   // and extend to the end of the current line, which is represented by the control character '\n' (beware Windows users!).
   def comment: Parser[Unit] = {
     for {_ <- string("//")

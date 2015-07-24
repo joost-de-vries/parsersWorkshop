@@ -12,14 +12,13 @@ object CompositeParsers {
                _ <- item
                y <- item} yield (x, y)
 
-  val q: Parser[List[Int]] = for {
-    _ <- char('[')
-    d <- digit
-    ds <- many(for {_ <- char(',')
-                    d2 <- digit
-    } yield d2.toString.toInt)
-    _ <- char(']')
-  } yield (d.toString.toInt :: ds)
+  val q: Parser[List[Int]] = for {_ <- char('[')
+                                  d <- digit
+                                  ds <- many(for {_ <- char(',')
+                                                  d2 <- digit
+                                  } yield d2.toString.toInt)
+                                  _ <- char(']')
+  } yield d.toString.toInt :: ds
 
 }
 

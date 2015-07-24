@@ -6,7 +6,7 @@ package parzer
 object CharParsers {
   import Parser._
 
-  def item: Parser[Char] = new Parser(inp => inp match {
+  def item: Parser[Char] = new Parser({
     case List() => None
     case x :: xs => Some((x, xs))
   })
